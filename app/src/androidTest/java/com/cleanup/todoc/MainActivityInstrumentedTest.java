@@ -1,5 +1,7 @@
 package com.cleanup.todoc;
 
+import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
@@ -56,6 +58,43 @@ public class MainActivityInstrumentedTest {
         assertThat(lblNoTask.getVisibility(), equalTo(View.VISIBLE));
         // Check that recyclerView is not displayed anymore
         assertThat(listTasks.getVisibility(), equalTo(View.GONE));
+    }
+
+    @Test
+    public void tasksShouldBeInDB() {
+        MainActivity activity = rule.getActivity();
+        InstrumentationRegistry.getTargetContext().deleteDatabase("Todoc.database");
+
+        onView(withId(R.id.fab_add_task)).perform(click());
+        onView(withId(R.id.txt_task_name)).perform(replaceText("aaa Tâche example"));
+        onView(withId(android.R.id.button1)).perform(click());
+        onView(withId(R.id.fab_add_task)).perform(click());
+        onView(withId(R.id.txt_task_name)).perform(replaceText("zzz Tâche example"));
+        onView(withId(android.R.id.button1)).perform(click());
+        onView(withId(R.id.fab_add_task)).perform(click());
+        onView(withId(R.id.txt_task_name)).perform(replaceText("hhh Tâche example"));
+        onView(withId(android.R.id.button1)).perform(click());
+
+        onView(withRecyclerView(R.id.list_tasks).atPositionOnView(0, R.id.lbl_task_name))
+                .check(matches(withText("aaa Tâche example")));
+        onView(withRecyclerView(R.id.list_tasks).atPositionOnView(1, R.id.lbl_task_name))
+                .check(matches(withText("zzz Tâche example")));
+        onView(withRecyclerView(R.id.list_tasks).atPositionOnView(2, R.id.lbl_task_name))
+                .check(matches(withText("hhh Tâche example")));
+
+        rule.finishActivity();
+        rule.launchActivity(new Intent());
+
+        onView(withRecyclerView(R.id.list_tasks).atPositionOnView(0, R.id.lbl_task_name))
+                .check(matches(withText("aaa Tâche example")));
+        onView(withRecyclerView(R.id.list_tasks).atPositionOnView(1, R.id.lbl_task_name))
+                .check(matches(withText("zzz Tâche example")));
+        onView(withRecyclerView(R.id.list_tasks).atPositionOnView(2, R.id.lbl_task_name))
+                .check(matches(withText("hhh Tâche example")));
+
+        onView(withRecyclerView(R.id.list_tasks).atPositionOnView(0, R.id.img_delete)).perform(click());
+        onView(withRecyclerView(R.id.list_tasks).atPositionOnView(0, R.id.img_delete)).perform(click());
+        onView(withRecyclerView(R.id.list_tasks).atPositionOnView(0, R.id.img_delete)).perform(click());
     }
 
     @Test
