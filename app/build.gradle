@@ -10,7 +10,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.cleanup.todoc"
+        applicationId "com.paulleclerc.todoc"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -19,7 +19,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
